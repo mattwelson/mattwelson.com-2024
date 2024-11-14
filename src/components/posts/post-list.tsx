@@ -5,7 +5,6 @@ export async function PostList({ category }: { category?: string }) {
   const posts = await getPosts({
     category,
   });
-  console.log({ posts, category });
 
   return (
     <div className="grid gap-16">

@@ -35,6 +35,7 @@ const components = {
         <PageImage image={value} />
       </div>
     ),
+    reference: ({ value }) => <pre>{JSON.stringify(value, undefined, 2)}</pre>,
     unsupported: ({ value }: { value: { unsupportedType: string } }) => (
       <div className="border-red-500 rounded bg-red-100 p-2 text-red-500">
         Unsupported: {value.unsupportedType}

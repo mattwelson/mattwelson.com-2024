@@ -23,6 +23,11 @@ export function PageImage({
           imageLoader({ image, width, quality })
         }
       />
+      {image.caption && (
+        <figcaption className="text-center text-muted-foreground my-2 text-sm">
+          {image.caption}
+        </figcaption>
+      )}
     </div>
   );
 }

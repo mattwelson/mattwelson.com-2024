@@ -53,40 +53,46 @@ export function getPosts(params: { category?: string } | undefined) {
 }
 
 export function getPost(slug: string) {
-  return runQuery(
-    q(`*[slug.current == '${slug}'][0]`).grab$({
-      _id: q.string(),
-      title: q.string(),
-      image: sanityImage("image", {
-        withAsset: ["base", "dimensions"],
-      }),
-      slug: q.slug("slug"),
-      date: ["_createdAt", q.date()],
-      categoryColour: ["category->colour", q.string()],
-      categoryTitle: ["category->title", q.string()],
-      content: q("content")
-        .filter()
-        .select({
-          '_type == "block"': ["{...}", q.contentBlock()],
-          '_type == "spotify"': q("").grab$({
-            _type: q.string(),
-            url: q.string(),
-          }),
-          '_type == "youtube"': q("").grab$({
-            _type: q.string(),
-            url: q.string(),
-          }),
-          '_type == "metaimage"': sanityImage("", {
-            withAsset: ["base", "dimensions"],
-          }),
-          default: {
-            _key: q.string(),
-            _type: ['"unsupported"', q.literal("unsupported")],
-            unsupportedType: ["_type", q.string()],
+  const query = q(`*[slug.current == '${slug}'][0]`).grab$({
+    _id: q.string(),
+    title: q.string(),
+    image: sanityImage("image", {
+      withAsset: ["base", "dimensions"],
+      additionalFields: {
+        caption: q.string(),
+      },
+    }),
+    slug: q.slug("slug"),
+    date: ["_createdAt", q.date()],
+    categoryColour: ["category->colour", q.string()],
+    categoryTitle: ["category->title", q.string()],
+    content: q("content")
+      .filter()
+      .select({
+        '_type == "block"': ["{...}", q.contentBlock()],
+        '_type == "spotify"': q("").grab$({
+          _type: q.string(),
+          url: q.string(),
+        }),
+        '_type == "youtube"': q("").grab$({
+          _type: q.string(),
+          url: q.string(),
+        }),
+        '_type == "reference"': ["reference->{...}", q.unknown()],
+        '_type == "metaimage"': sanityImage("", {
+          withAsset: ["base", "dimensions"],
+          additionalFields: {
+            caption: q.string(),
           },
         }),
-    })
-  );
+        default: {
+          _key: q.string(),
+          _type: ['"unsupported"', q.literal("unsupported")],
+          unsupportedType: ["_type", q.string()],
+        },
+      }),
+  });
+  return runQuery(query);
 }
 
 export function getInstagramPosts(count = 6) {
@@ -100,5 +106,21 @@ export function getInstagramPosts(count = 6) {
         url: q.string(),
       })
       .slice(0, count - 1)
+  );
+}
+
+export function getAllCategoryNames() {
+  return runQuery(
+    q("*").filterByType("category").grabOne$("title", q.string().toLowerCase())
+  );
+}
+
+export function getAllPostSlugs() {
+  return runQuery(
+    q("*")
+      .filterByType("post")
+      .grab$({
+        slug: q.slug("slug"),
+      })
   );
 }

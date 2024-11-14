@@ -8,20 +8,17 @@ import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-const postCardVariants = cva(
-  "overflow-hidden h-full min-h-44 w-full max-w-[36em]",
-  {
-    variants: {
-      orientation: {
-        horizontal: "grid grid-cols-[1fr_2fr] items-center",
-        vertical: "flex flex-col-reverse",
-      },
+const postCardVariants = cva("overflow-hidden h-full min-h-44 w-full", {
+  variants: {
+    orientation: {
+      horizontal: "flex items-center",
+      vertical: "flex flex-col-reverse",
     },
-    defaultVariants: {
-      orientation: "vertical",
-    },
-  }
-);
+  },
+  defaultVariants: {
+    orientation: "vertical",
+  },
+});
 
 interface PostCardProps extends VariantProps<typeof postCardVariants> {
   post: Awaited<ReturnType<typeof getPosts>>[0];
@@ -36,11 +33,15 @@ export function PostCard({ post, orientation, className }: PostCardProps) {
           image={post.image}
           className={
             orientation === "horizontal"
-              ? "aspect-square"
+              ? "aspect-square size-64"
               : "aspect-video w-full"
           }
         />
-        <CardHeader className="space-y-2">
+        <CardHeader
+          className={cn("space-y-2", {
+            "w-64": orientation === "horizontal",
+          })}
+        >
           <CategoryBadge post={post} className="" />
           <CardTitle>{post.title}</CardTitle>
           <CardDescription>{format(post.date, "dd MMM yyyy")}</CardDescription>

@@ -3,8 +3,9 @@ import { PageImage } from "@/components/posts/page-image";
 import { Text } from "@/components/typography/text";
 import { Wrapper } from "@/components/typography/wrapper";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { getPost } from "@/lib/sanity/queries";
+import { getAllPostSlugs, getPost } from "@/lib/sanity/queries";
 import { format } from "date-fns";
+import type { PortableTextProps } from "next-sanity";
 
 export default async function BlogPostPage({
   params,
@@ -25,8 +26,13 @@ export default async function BlogPostPage({
         <div className="mb-4 -mx-8">
           <PageImage image={post.image} />
         </div>
-        <Text value={post.content} />
+        <Text value={post.content as PortableTextProps["value"]} />
       </Wrapper>
     </div>
   );
+}
+
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map(({ slug }) => ({ slug }));
 }

@@ -1,5 +1,6 @@
 import { PostList, PostListSkeleton } from "@/components/posts/post-list";
 import { Wrapper } from "@/components/typography/wrapper";
+import { getAllCategoryNames } from "@/lib/sanity/queries";
 import { Suspense } from "react";
 
 export default async function CategoryPage({
@@ -15,4 +16,9 @@ export default async function CategoryPage({
       </Suspense>
     </Wrapper>
   );
+}
+
+export async function generateStaticParams() {
+  const names = await getAllCategoryNames();
+  return names.map((categorySlug) => ({ categorySlug }));
 }

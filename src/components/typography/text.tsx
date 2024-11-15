@@ -43,6 +43,11 @@ const components = {
       </div>
     ),
   },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className="list-disc list-inside">{children}</li>
+    ),
+  },
 } satisfies Partial<PortableTextReactComponents>;
 
 export function Text({ value }: PortableTextProps) {

@@ -6,6 +6,7 @@ import {
 import { SpotifyEmbed } from "./sanity/spotify-embed";
 import { YoutubeEmbed } from "./sanity/youtube-embed";
 import { PageImage } from "../posts/page-image";
+import { ReferenceComponent } from "./sanity/reference-component";
 
 const components = {
   marks: {
@@ -35,7 +36,7 @@ const components = {
         <PageImage image={value} />
       </div>
     ),
-    reference: ({ value }) => <pre>{JSON.stringify(value, undefined, 2)}</pre>,
+    reference: ({ value }) => <ReferenceComponent reference={value._ref} />,
     unsupported: ({ value }: { value: { unsupportedType: string } }) => (
       <div className="border-red-500 rounded bg-red-100 p-2 text-red-500">
         Unsupported: {value.unsupportedType}

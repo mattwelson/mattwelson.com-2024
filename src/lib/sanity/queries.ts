@@ -78,7 +78,10 @@ export function getPost(slug: string) {
           _type: q.string(),
           url: q.string(),
         }),
-        '_type == "reference"': ["reference->{...}", q.unknown()],
+        '_type == "reference"': q("").grab$({
+          _type: q.string(),
+          _ref: q.string(),
+        }),
         '_type == "metaimage"': sanityImage("", {
           withAsset: ["base", "dimensions"],
           additionalFields: {
@@ -93,6 +96,18 @@ export function getPost(slug: string) {
       }),
   });
   return runQuery(query);
+}
+
+export function getReferencedThing(id: string) {
+  return runQuery(
+    q(`*[_id == "${id}"][0]`, { isArray: false }).select({
+      '_type == "instagrampost"': q("").grab$({
+        _type: q.literal("instagrampost"),
+        url: q.string(),
+        image: sanityImage("image"),
+      }),
+    })
+  );
 }
 
 export function getInstagramPosts(count = 6) {

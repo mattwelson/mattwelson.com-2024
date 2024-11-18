@@ -11,7 +11,7 @@ export function Wrapper({
   return (
     <div
       className={cn(
-        "grid grid-cols-[1fr_65ch_1fr] gap-2 [&>*]:col-start-2",
+        "grid grid-cols-[1fr_min(65ch,calc(100%-64px))_1fr] gap-2 [&>*]:col-start-2",
         className
       )}
     >
